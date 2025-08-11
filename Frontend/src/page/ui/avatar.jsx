@@ -21,3 +21,14 @@ export const AvatarImage = ({ src, alt, className, ...props }) => {
     />
   );
 };
+
+export const AvatarFallback = ({ children, className, ...props }) => {
+  return (
+    <div
+      className={`w-full h-full flex items-center justify-center bg-gray-100 text-gray-600 font-semibold ${className}`}
+      {...props}
+    >
+      {children}
+    </div>
+  );
+};

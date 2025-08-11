@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { MapPin, Calendar, Star, ChevronRight } from 'lucide-react';
+import { MapPin, Calendar, Star, ChevronRight, User, LogOut, Settings } from 'lucide-react';
 import SBRBadmintonImage from '../assets/SBRBadminton.jpg';
 import PQRSportsArenaImage from '../assets/PQRSportsArena.jpg';
 import XYZCricketGroundImage from '../assets/XYZCricketGround.jpg';
 import WaterWorldImage from '../assets/WaterWorld.jpg';
 import FindPlayersVenuesImage from '../assets/FIND PLAYERS & VENUES NEARBY.jpg';
 
-import { Avatar, AvatarImage } from './ui/avatar';
+import { Avatar, AvatarImage, AvatarFallback } from './ui/avatar';
 import { Popover, PopoverTrigger, PopoverContent } from './ui/popover';
 import { Button } from './ui/button';
 import { Link, useNavigate } from 'react-router-dom';
@@ -61,34 +61,26 @@ const PopularSportsCard = ({ sport }) => (
 );
 
 const Home = () => {
-  const { user, login, logout } = useAuth();
-  const [localUser, setLocalUser] = useState(null);
+  const { user, logout, loading } = useAuth();
   const navigate = useNavigate();
-
-  useEffect(() => {
-    const handleUserSignUp = (event) => {
-      login(event.detail);
-    };
-    window.addEventListener('userSignUp', handleUserSignUp);
-    return () => {
-      window.removeEventListener('userSignUp', handleUserSignUp);
-    };
-  }, [login]);
-
-  // Removed loginHandler to disable direct login simulation
-  // const loginHandler = () => {
-  //   login({
-  //     fullName: "John Doe",
-  //     email: "john.doe@example.com",
-  //     profile: {
-  //       profilePhoto: "https://thumbs.dreamstime.com/b/default-avatar-profile-icon-vector-social-media-user-image-182145777.jpg",
-  //     },
-  //     role: "candidate",
-  //   });
-  // };
 
   const logoutHandler = () => {
     logout();
+    navigate('/');
+  };
+
+  // Function to get display name for role
+  const getRoleDisplayName = (role) => {
+    switch (role) {
+      case 'user':
+        return 'Player';
+      case 'facilityOwner':
+        return 'Facility Owner';
+      case 'admin':
+        return 'Admin';
+      default:
+        return role;
+    }
   };
 
   const venues = [
@@ -135,6 +127,18 @@ const Home = () => {
     { name: 'Table Tennis', image: '/src/assets/tabletennis.jpg' },
   ];
 
+  // Show loading state while checking authentication
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+          <p className="mt-4 text-gray-600">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-white text-gray-800 font-sans overflow-x-hidden">
       {/* Header */}
@@ -149,51 +153,75 @@ const Home = () => {
           {user ? (
             <Popover>
               <PopoverTrigger asChild>
-                <Avatar className="cursor-pointer w-8 h-8">
-                  <AvatarImage src={user?.profile?.profilePhoto} alt="" />
+                <Avatar className="cursor-pointer w-8 h-8 hover:ring-2 hover:ring-blue-500 transition-all">
+                  <AvatarImage src={user.avatar} alt={user.fullName} />
+                  <AvatarFallback className="bg-blue-100 text-blue-600 font-semibold">
+                    {user.fullName?.charAt(0)?.toUpperCase() || 'U'}
+                  </AvatarFallback>
                 </Avatar>
               </PopoverTrigger>
-              <PopoverContent className="w-80 max-h-[80vh] overflow-y-auto">
-                <div className="flex flex-col items-center space-y-4 p-4">
-                  <Avatar className="w-20 h-20">
-                    <AvatarImage src={user?.profile?.profilePhoto} alt="" />
-                  </Avatar>
-                  <div className="text-center">
-                    <h4 className="font-semibold text-lg">{user?.fullName}</h4>
-                    <p className="text-sm text-gray-600">{user?.email || 'No email provided'}</p>
+              <PopoverContent className="w-80 p-0" align="end">
+                <div className="p-6">
+                  {/* User Info Section */}
+                  <div className="flex items-center space-x-4 mb-6">
+                    <Avatar className="w-16 h-16">
+                      <AvatarImage src={user.avatar} alt={user.fullName} />
+                      <AvatarFallback className="bg-blue-100 text-blue-600 font-semibold text-lg">
+                        {user.fullName?.charAt(0)?.toUpperCase() || 'U'}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="flex-1">
+                      <h4 className="font-semibold text-lg text-gray-900">{user.fullName}</h4>
+                      <p className="text-sm text-gray-600">{user.email}</p>
+                      <span className="inline-block mt-1 px-2 py-1 bg-blue-100 text-blue-800 text-xs font-medium rounded-full">
+                        {getRoleDisplayName(user.role)}
+                      </span>
+                    </div>
                   </div>
-                  <Link to="/profile" className="w-full">
-                    <Button className="w-full mb-2">
-                      View Profile
+
+                  {/* Action Buttons */}
+                  <div className="space-y-3">
+                    <Link to="/profile" className="w-full">
+                      <Button variant="outline" className="w-full justify-start cursor-pointer">
+                        <User size={16} className="mr-2" />
+                        View Profile
+                      </Button>
+                    </Link>                  
+              
+                    
+                    <Button 
+                      onClick={logoutHandler} 
+                      variant="destructive" 
+                      className="w-full justify-start cursor-pointer"
+                    >
+                      <LogOut size={16} className="mr-2" />
+                      Logout
                     </Button>
-                  </Link>
-                  <Button onClick={logoutHandler} className="w-full">
-                    Logout
-                  </Button>
+                  </div>
                 </div>
               </PopoverContent>
             </Popover>
-          ) : null}
-
-          {!user ? (
-            <>
+          ) : (
+            <div className="flex items-center space-x-3">
               <Button 
                 onClick={() => navigate('/login')}
-                className="text-gray-600 px-4 py-2 rounded-full border border-gray-300 hover:bg-gray-100 transition-colors duration-200"
                 variant="outline"
+                className="text-gray-600 hover:bg-gray-100 cursor-pointer"
               >
                 Login
               </Button>
               <Button 
                 onClick={() => navigate('/register')}
-                className="text-white bg-blue-600 px-4 py-2 rounded-full font-semibold hover:bg-blue-700 transition-colors duration-200"
+                className="bg-blue-600 hover:bg-blue-700 text-white cursor-pointer"
               >
-                Sign Up
+                Sign Up 
               </Button>
-            </>
-          ) : null}
+            </div>
+          )}
         </div>
+
       </header>
+
 
       {/* Hero Section */}
       <section className="flex flex-col md:flex-row items-center my-8 md:my-16 px-4 md:px-8">
@@ -209,6 +237,11 @@ const Home = () => {
           <h2 className="text-3xl md:text-5xl font-extrabold text-gray-900 leading-tight">
             FIND PLAYERS & VENUES NEARBY
           </h2>
+          {user && (
+            <p className="text-lg text-gray-600">
+              Welcome back, {user.fullName}! Ready to play some {user.role === 'user' ? 'sports' : 'manage your facility'}?
+            </p>
+          )}
         </div>
         <div className="flex-1 w-full md:w-auto p-4 md:p-8">
           <img 

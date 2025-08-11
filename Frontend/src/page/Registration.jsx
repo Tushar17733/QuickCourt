@@ -47,11 +47,15 @@ const {user} = useSelector(store=>store.auth)
       });
       console.log(res)
 
-      if (res.data.success && user) {
+      // Check for successful response and navigate to OTP
+      if (res.status === 200) {
+        // Store email in localStorage for OTP page
+        localStorage.setItem('pendingEmail', input.email);
         navigate("/otp");
       }
     } catch (error) {
       console.log(error);
+      // Handle error appropriately (show error message to user)
     }
   };
 
@@ -116,8 +120,8 @@ const {user} = useSelector(store=>store.auth)
                 required
               >
                 <option value="" disabled>Select an option</option>
-                <option value="Player">Player</option>
-                <option value="Facility Owner">Facility Owner</option>
+                <option value="user">Player</option>
+                <option value="facilityOwner">Facility Owner</option>
               </select>
               <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
                 <svg className="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
@@ -173,23 +177,13 @@ const {user} = useSelector(store=>store.auth)
               </div>
             </div>
           </div>
-{
-   user?  (<Link to="/otp"><button
+
+          <button
             type="submit"
             className="w-full bg-blue-600 text-white font-semibold py-2 rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors cursor-pointer"
           >
             Sign Up
           </button>
-          </Link>) : (
-            <button
-            type="submit"
-            className="w-full bg-blue-600 text-white font-semibold py-2 rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors cursor-pointer"
-          >
-            Sign Up
-          </button>
-          )
-}
-          
           
         </form>
 

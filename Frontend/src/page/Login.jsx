@@ -1,15 +1,56 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import sportsImage from '../assets/sports.jpg';
+import { USER_API_ENDPOINT } from '../utils/constant';
+import { useAuth } from '../context/AuthContext';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const navigate = useNavigate();
+  const { login } = useAuth();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Login attempt with:', { email, password });
-    // Here you would add your authentication logic.
+    setLoading(true);
+    setError('');
+
+    try {
+      const response = await axios.post(`${USER_API_ENDPOINT}/login`, {
+        email,
+        password
+      }, {
+        withCredentials: true
+      });
+
+      if (response.status === 200) {
+        // Store user data in context
+        const userData = {
+          fullName: response.data.user?.fullName || 'User',
+          email: email,
+          role: response.data.user?.role || 'Player',
+          avatar: response.data.user?.avatar || 'https://thumbs.dreamstime.com/b/default-avatar-profile-icon-vector-social-media-user-image-182145777.jpg',
+          token: response.data.token
+        };
+
+        login(userData);
+        
+        // Store token in localStorage for persistence
+        localStorage.setItem('token', response.data.token);
+        localStorage.setItem('user', JSON.stringify(userData));
+
+        // Redirect to home page
+        navigate('/');
+      }
+    } catch (error) {
+      console.error('Login error:', error);
+      setError(error.response?.data?.message || 'Login failed. Please check your credentials.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -41,6 +82,13 @@ const Login = () => {
             <h3 className="text-lg md:text-xl text-center mb-6">LOGIN</h3>
           </div>
 
+          {/* Error Message */}
+          {error && (
+            <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
+              <p className="text-red-600 text-sm text-center">{error}</p>
+            </div>
+          )}
+
           <form onSubmit={handleSubmit} className="w-full max-w-sm mx-auto space-y-4 md:space-y-6">
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-gray-600 mb-1">Email</label>
@@ -52,6 +100,7 @@ const Login = () => {
                 className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 placeholder="Your email"
                 required
+                disabled={loading}
               />
             </div>
 
@@ -65,21 +114,23 @@ const Login = () => {
                 className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 placeholder="Your password"
                 required
+                disabled={loading}
               />
             </div>
 
             <button
               type="submit"
-              className="w-full bg-blue-600 text-white font-semibold py-2 rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors cursor-pointer"
+              disabled={loading}
+              className="w-full bg-blue-600 text-white font-semibold py-2 rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors cursor-pointer disabled:bg-gray-400 disabled:cursor-not-allowed"
             >
-              Login
+              {loading ? 'Logging in...' : 'Login'}
             </button>
           </form>
 
           <div className="mt-6 md:mt-8 text-center text-sm space-y-2">
             <p className="text-gray-600">
               Don't have an account?{' '}
-              <Link to="/register" className="text-blue-600 hover:underline font-medium">Sign up</Link>
+              <Link to="/registration" className="text-blue-600 hover:underline font-medium">Sign up</Link>
             </p>
             <p>
               <a href="#" className="text-blue-600 hover:underline text-sm">Forgot password?</a>

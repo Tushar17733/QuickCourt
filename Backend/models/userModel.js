@@ -7,7 +7,7 @@ const userSchema = new mongoose.Schema({
   avatar: { type: String }, // Cloudinary URL
   role: {
     type: String,
-    enum: ["user", "facilityOwner", "admin"],
+    enum: ["user", "facilityOwner"],
     default: "user"
   },
   isVerified: { type: Boolean, default: false }

@@ -121,7 +121,17 @@ export const login = async (req, res) => {
       expiresIn: "7d"
     });
 
-    res.json({ message: "Login successful", token });
+    // Return user data along with token
+    res.json({ 
+      message: "Login successful", 
+      token,
+      user: {
+        fullName: user.fullName,
+        email: user.email,
+        role: user.role,
+        avatar: user.avatar || "https://thumbs.dreamstime.com/b/default-avatar-profile-icon-vector-social-media-user-image-182145777.jpg"
+      }
+    });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
