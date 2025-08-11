@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 // Using react-icons to represent the icons from the design.
 import { FaUserCircle, FaEnvelope, FaLock, FaBook, FaEdit, FaCaretDown, FaMapMarkerAlt, FaClock, FaCalendarAlt, FaEye } from 'react-icons/fa';
-import CancelledBookingModal from '../components/CancelledBookingModal';
+
 
 // This is the main component for the user profile and booking screen.
 const Profile = () => {
