@@ -30,7 +30,7 @@ const isAuthenticated = async (req, res, next) => {
       });
     }
 
-    req.user = user; // ✅ store full user object
+    req.user = user; // store full user object
     next();
   } catch (error) {
     console.log(error);

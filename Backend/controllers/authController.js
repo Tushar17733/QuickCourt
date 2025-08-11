@@ -3,6 +3,7 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import getDataUri from "../utils/datauri.js"
 import cloudinary from "../utils/cloudinary.js"
+import { transporter } from "../utils/nodemailer.js"
 
 let pendingUsers = {};
 
@@ -10,9 +11,9 @@ export const signup = async (req, res) => {
   try {
     const { fullName, email, password, role } = req.body;
 
-    if (!req.file) {
-      return res.status(400).json({ message: "Avatar image is required" });
-    }
+    // if (!req.file) {
+    //   return res.status(400).json({ message: "Avatar image is required" });
+    // }
 
     // Check if email already exists in DB
     const existingUser = await User.findOne({ email });
@@ -23,10 +24,13 @@ export const signup = async (req, res) => {
     // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Upload avatar to Cloudinary
-    const fileUri = getDataUri(req.file);
-    const cloudResponse = await cloudinary.uploader.upload(fileUri.content);
 
+    let avatarUrl = "";
+    if (req.file) {
+      const fileUri = getDataUri(req.file);
+      const cloudResponse = await cloudinary.uploader.upload(fileUri.content);
+      avatarUrl = cloudResponse.secure_url;
+    }
     // Generate OTP
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
     const otpExpires = Date.now() + 10 * 60 * 1000; // 10 min
@@ -37,10 +41,23 @@ export const signup = async (req, res) => {
       email,
       password: hashedPassword,
       role,
-      avatar: cloudResponse.secure_url,
+      avatar: avatarUrl,
       otp,
       otpExpires
     };
+
+    await transporter.sendMail({
+      from: `"My App" <${process.env.EMAIL_USER}>`,
+      to: email,
+      subject: "Your OTP Code",
+      html: `
+        <h2>Email Verification</h2>
+        <p>Hello ${fullName},</p>
+        <p>Your OTP code is: <b>${otp}</b></p>
+        <p>This code will expire in 10 minutes.</p>
+      `
+    });
+
 
     // Send OTP via email service (placeholder)
     console.log(`OTP for ${email}: ${otp}`);
@@ -120,7 +137,7 @@ export const login = async (req, res) => {
 
 export const updateProfile = async (req, res) => {
   try {
-    const user = req.user; 
+    const user = req.user;
     const { fullName, email, oldPassword, newPassword } = req.body;
 
     // Update full name & email if provided
@@ -161,12 +178,12 @@ export const updateProfile = async (req, res) => {
 
 
 export const logout = async (req, res) => {
-    try {
-        return res.status(200).cookie("token", "", { maxAge: 0 }).json({
-            message: "Logged out successfully",
-            success: true
-        });
-    } catch (error) {
-        console.log(error);
-    }
+  try {
+    return res.status(200).cookie("token", "", { maxAge: 0 }).json({
+      message: "Logged out successfully",
+      success: true
+    });
+  } catch (error) {
+    console.log(error);
+  }
 };
