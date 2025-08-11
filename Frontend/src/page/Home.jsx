@@ -9,7 +9,7 @@ import FindPlayersVenuesImage from '../assets/FIND PLAYERS & VENUES NEARBY.jpg';
 import { Avatar, AvatarImage } from './ui/avatar';
 import { Popover, PopoverTrigger, PopoverContent } from './ui/popover';
 import { Button } from './ui/button';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 import { useAuth } from '../context/AuthContext';
 
@@ -63,6 +63,7 @@ const PopularSportsCard = ({ sport }) => (
 const Home = () => {
   const { user, login, logout } = useAuth();
   const [localUser, setLocalUser] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleUserSignUp = (event) => {
@@ -74,16 +75,17 @@ const Home = () => {
     };
   }, [login]);
 
-  const loginHandler = () => {
-    login({
-      fullName: "John Doe",
-      email: "john.doe@example.com",
-      profile: {
-        profilePhoto: "https://thumbs.dreamstime.com/b/default-avatar-profile-icon-vector-social-media-user-image-182145777.jpg",
-      },
-      role: "candidate",
-    });
-  };
+  // Removed loginHandler to disable direct login simulation
+  // const loginHandler = () => {
+  //   login({
+  //     fullName: "John Doe",
+  //     email: "john.doe@example.com",
+  //     profile: {
+  //       profilePhoto: "https://thumbs.dreamstime.com/b/default-avatar-profile-icon-vector-social-media-user-image-182145777.jpg",
+  //     },
+  //     role: "candidate",
+  //   });
+  // };
 
   const logoutHandler = () => {
     logout();
@@ -144,22 +146,7 @@ const Home = () => {
             <span>Book</span>
           </button>
 
-          {!user ? (
-            <>
-              <Button 
-                onClick={loginHandler}
-                className="text-gray-600 px-4 py-2 rounded-full border border-gray-300 hover:bg-gray-100 transition-colors duration-200"
-                variant="outline"
-              >
-                Login
-              </Button>
-              <Button 
-                className="text-white bg-blue-600 px-4 py-2 rounded-full font-semibold hover:bg-blue-700 transition-colors duration-200"
-              >
-                Sign Up
-              </Button>
-            </>
-          ) : (
+          {user ? (
             <Popover>
               <PopoverTrigger asChild>
                 <Avatar className="cursor-pointer w-8 h-8">
@@ -175,13 +162,36 @@ const Home = () => {
                     <h4 className="font-semibold text-lg">{user?.fullName}</h4>
                     <p className="text-sm text-gray-600">{user?.email || 'No email provided'}</p>
                   </div>
-                  <Button onClick={logoutHandler} className="w-full mt-2">
+                  <Link to="/profile" className="w-full">
+                    <Button className="w-full mb-2">
+                      View Profile
+                    </Button>
+                  </Link>
+                  <Button onClick={logoutHandler} className="w-full">
                     Logout
                   </Button>
                 </div>
               </PopoverContent>
             </Popover>
-          )}
+          ) : null}
+
+          {!user ? (
+            <>
+              <Button 
+                onClick={() => navigate('/login')}
+                className="text-gray-600 px-4 py-2 rounded-full border border-gray-300 hover:bg-gray-100 transition-colors duration-200"
+                variant="outline"
+              >
+                Login
+              </Button>
+              <Button 
+                onClick={() => navigate('/register')}
+                className="text-white bg-blue-600 px-4 py-2 rounded-full font-semibold hover:bg-blue-700 transition-colors duration-200"
+              >
+                Sign Up
+              </Button>
+            </>
+          ) : null}
         </div>
       </header>
 
