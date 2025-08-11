@@ -5,7 +5,8 @@ import Login from './page/Login'
 import Registration from './page/Registration'
 import Otp from './page/Otp'
 import Profile from './page/Profile'
-import Cancelled from './page/Cancelled'
+
+import Venues from './page/Venues'
 
 function App() {
   return (
@@ -16,7 +17,8 @@ function App() {
         <Route path="/register" element={<Registration />} />
         <Route path="/otp" element={<Otp />} />
         <Route path="/profile" element={<Profile/>} />
-        <Route path="/cancelled" element={<Cancelled/>} />
+        
+        <Route path="/venues" element={<Venues />} />
       </Routes>
     </div>
   )
