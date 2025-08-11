@@ -18,15 +18,21 @@ const Registration = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log('Sign up data:', {
+    const userData = {
       signupAs,
       fullName,
       email,
       password,
       confirmPassword,
       profilePic,
-    });
+    };
+    console.log('Sign up data:', userData);
     // Add your sign-up logic here, e.g., API call to create a new user.
+
+    // Update global user state on successful sign-up
+    if (typeof window !== 'undefined' && window.dispatchEvent) {
+      window.dispatchEvent(new CustomEvent('userSignUp', { detail: userData }));
+    }
   };
 
   return (

@@ -1,4 +1,3 @@
-import React, { useState } from 'react';
 import { MapPin, Calendar, Star, ChevronRight } from 'lucide-react';
 import SBRBadmintonImage from '../assets/SBRBadminton.jpg';
 import PQRSportsArenaImage from '../assets/PQRSportsArena.jpg';
@@ -61,6 +60,9 @@ const PopularSportsCard = ({ sport }) => (
   </div>
 );
 
+import React, { useState, useEffect } from 'react';
+import { useAuth } from '../context/AuthContext';
+
 const Home = () => {
   // Venue data with images
   const venues = [
@@ -108,25 +110,33 @@ const Home = () => {
     { name: 'Table Tennis', image: '/src/assets/tabletennis.jpg' },
   ];
 
-  // State to manage the authenticated user
-  const [user, setUser] = useState(null);
-  
-  // Simulate user data
-  const simulatedUser = {
-    fullName: "John Doe",
-    profile: {
-      profilePhoto: "https://thumbs.dreamstime.com/b/default-avatar-profile-icon-vector-social-media-user-image-182145777.jpg",
-      bio: "Sports Enthusiast"
-    },
-    role: "candidate"
-  };
+  const { user, login, logout } = useAuth();
+  const [localUser, setLocalUser] = useState(null);
+
+  useEffect(() => {
+    const handleUserSignUp = (event) => {
+      login(event.detail);
+    };
+    window.addEventListener('userSignUp', handleUserSignUp);
+    return () => {
+      window.removeEventListener('userSignUp', handleUserSignUp);
+    };
+  }, [login]);
 
   const loginHandler = () => {
-    setUser(simulatedUser);
+    // For testing, can call login with dummy data or integrate with real login
+    login({
+      fullName: "John Doe",
+      email: "john.doe@example.com",
+      profile: {
+        profilePhoto: "https://thumbs.dreamstime.com/b/default-avatar-profile-icon-vector-social-media-user-image-182145777.jpg",
+      },
+      role: "candidate",
+    });
   };
-  
+
   const logoutHandler = () => {
-    setUser(null);
+    logout();
   };
 
   return (
@@ -164,26 +174,17 @@ const Home = () => {
               </Avatar>
             </PopoverTrigger>
               <PopoverContent className="w-80 max-h-[80vh] overflow-y-auto">
-                <div className="flex gap-4 space-y-2">
-                  <Avatar className="cursor-pointer">
-                    <AvatarImage src={user?.profile?.profilePhoto} alt="@shadcn" />
+                <div className="flex flex-col items-center space-y-4 p-4">
+                  <Avatar className="w-20 h-20">
+                    <AvatarImage src={user?.profile?.profilePhoto} alt="" />
                   </Avatar>
-                  <div>
-                    <h4 className='font-medium'>{user?.fullName}</h4>
-                    <p className='text-sm text-muted-foreground'>{user?.profile?.bio}</p>
+                  <div className="text-center">
+                    <h4 className="font-semibold text-lg">{user?.fullName}</h4>
+                    <p className="text-sm text-gray-600">{user?.email || 'No email provided'}</p>
                   </div>
-                </div>
-                <div className='flex flex-col gap-2 text-gray-600'>
-                  {user && user.role === "candidate" && (
-                    <div className="flex flex-wrap items-center gap-2 md:flex-row ml-[-13px] mt-[10px]">
-                      <Button variant="link" className="cursor-pointer">
-                        <Link to="/profile">View Profile</Link>
-                      </Button>
-                    </div>
-                  )}
-                  <div className="flex flex-wrap items-center gap-2 md:flex-row">
-                    <Button onClick={logoutHandler} className="cursor-pointer">Logout</Button>
-                  </div>
+                  <Button onClick={logoutHandler} className="w-full mt-2">
+                    Logout
+                  </Button>
                 </div>
               </PopoverContent>
             </Popover>
