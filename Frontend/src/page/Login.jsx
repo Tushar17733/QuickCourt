@@ -16,20 +16,20 @@ const Login = () => {
     <div className="min-h-screen bg-white font-sans text-gray-800">
       {/* Background Image for Mobile - hidden on md and up */}
       <div className="md:hidden fixed inset-0 z-0">
-        <img 
-          src={sportsImage} 
-          alt="Sports" 
+        <img
+          src={sportsImage}
+          alt="Sports"
           className="w-full h-full object-cover opacity-20"
         />
       </div>
-      
+
       {/* Content Container */}
       <div className="relative z-10 flex flex-col md:flex-row min-h-screen">
         {/* Left Panel - Image (Desktop only) */}
         <div className="hidden md:flex md:w-1/2 bg-[#f0f0f0] relative items-center justify-center">
-          <img 
-            src={sportsImage} 
-            alt="Sports" 
+          <img
+            src={sportsImage}
+            alt="Sports"
             className="w-full h-full object-cover object-center"
           />
         </div>
@@ -40,36 +40,36 @@ const Login = () => {
             <h2 className="text-3xl md:text-4xl font-bold text-center mb-2">QUICKCOURT</h2>
             <h3 className="text-lg md:text-xl text-center mb-6">LOGIN</h3>
           </div>
-          
+
           <form onSubmit={handleSubmit} className="w-full max-w-sm mx-auto space-y-4 md:space-y-6">
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-gray-600 mb-1">Email</label>
-              <input 
-                type="email" 
-                id="email" 
+              <input
+                type="email"
+                id="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" 
-                placeholder="Your email" 
+                className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder="Your email"
                 required
               />
             </div>
-            
+
             <div>
               <label htmlFor="password" className="block text-sm font-medium text-gray-600 mb-1">Password</label>
-              <input 
-                type="password" 
-                id="password" 
+              <input
+                type="password"
+                id="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" 
-                placeholder="Your password" 
+                className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder="Your password"
                 required
               />
             </div>
-            
-            <button 
-              type="submit" 
+
+            <button
+              type="submit"
               className="w-full bg-blue-600 text-white font-semibold py-2 rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
             >
               Login

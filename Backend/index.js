@@ -13,7 +13,11 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
-app.use(cors());
+const corsOptions = {
+    origin: 'http://localhost:5175',
+    credentials: true,
+};
+app.use(cors(corsOptions));
 
 const PORT = process.env.PORT || 3000;
 
