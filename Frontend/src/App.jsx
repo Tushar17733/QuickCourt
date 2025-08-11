@@ -1,10 +1,10 @@
 import React from 'react'
-import Login from './page/Login'
+import Home from './page/Home'
 
 function App() {
   return (
     <div>
-     <Login/>
+      <Home />
     </div>
   )
 }
