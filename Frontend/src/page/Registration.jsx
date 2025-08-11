@@ -1,42 +1,68 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import sportsImage from '../assets/sports.jpg';
-
+import { USER_API_ENDPOINT } from '../utils/constant';
+import axios from "axios"
+import { useSelector } from 'react-redux';
 
 const Registration = () => {
-  const [profilePic, setProfilePic] = useState(null);
-  const [signupAs, setSignupAs] = useState('');
-  const [fullName, setFullName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+const {user} = useSelector(store=>store.auth)
 
-  const handleProfilePicChange = (e) => {
-    // Handle profile picture file upload here
-    setProfilePic(e.target.files[0]);
+  const [input, setInput] = useState({
+    file: "",
+    role: "",
+    fullName: "",
+    email: "",
+    password: "",
+  });
+  const navigate = useNavigate()
+
+  const changeEventHandler = (e) => {
+    setInput({ ...input, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const changeFileHandler = (e) => {
+    setInput({ ...input, file: e.target.files?.[0] });
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Sign up data:', {
-      signupAs,
-      fullName,
-      email,
-      password,
-      confirmPassword,
-      profilePic,
-    });
-    // Add your sign-up logic here, e.g., API call to create a new user.
+
+    const formData = new FormData();
+    formData.append("fullName", input.fullName);
+    formData.append("email", input.email);
+    formData.append("password", input.password);
+    formData.append("role", input.role);
+
+    if (input.file) {
+      formData.append("file", input.file);
+    }
+
+    try {
+      const res = await axios.post(`${USER_API_ENDPOINT}/signup`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+        withCredentials: true,
+      });
+      console.log(res)
+
+      if (res.data.success && user) {
+        navigate("/otp");
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
     <div className="flex flex-col md:flex-row h-screen bg-white font-sans text-gray-800 overflow-hidden">
-      
+
       {/* Left Panel - Image takes half of the page */}
       <div className="hidden md:flex md:w-1/2 bg-[#f0f0f0] relative items-center justify-center p-0">
-        <img 
-          src={sportsImage} 
-          alt="Sports" 
+        <img
+          src={sportsImage}
+          alt="Sports"
           className="w-full h-full object-cover object-center"
         />
       </div>
@@ -53,30 +79,39 @@ const Registration = () => {
           <div className="flex items-center space-x-4">
             <span className="text-sm font-medium text-gray-600 w-1/3">Profile Picture</span>
             <label htmlFor="profile-pic-upload" className="w-20 h-20 rounded-full border border-dashed border-gray-400 flex items-center justify-center cursor-pointer hover:bg-gray-100 transition-colors">
-              {profilePic ? (
-                <img src={URL.createObjectURL(profilePic)} alt="Profile" className="w-full h-full rounded-full object-cover" />
+
+              {input.file ? (
+                <img
+                  src={URL.createObjectURL(input.file)}
+                  alt="Profile"
+                  className="w-full h-full rounded-full object-cover"
+                />
               ) : (
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                </svg>
+                <img
+                  src="https://thumbs.dreamstime.com/b/default-avatar-profile-icon-vector-social-media-user-image-182145777.jpg"
+                  alt="Profile"
+                  className="w-full h-full rounded-full object-cover"
+                />
               )}
+
             </label>
-            <input 
-              id="profile-pic-upload" 
-              type="file" 
-              accept="image/*" 
-              onChange={handleProfilePicChange} 
-              className="hidden" 
+            <input
+              id="profile-pic-upload"
+              type="file"
+              accept="image/*"
+              onChange={changeFileHandler}
+              className="hidden"
             />
           </div>
 
           <div>
-            <label htmlFor="signup-as" className="block text-sm font-medium text-gray-600 mb-1">Sign up as</label>
+            <label htmlFor="role" className="block text-sm font-medium text-gray-600 mb-1">Sign up as</label>
             <div className="relative">
               <select
-                id="signup-as"
-                value={signupAs}
-                onChange={(e) => setSignupAs(e.target.value)}
+                id="role"
+                name="role"
+                value={input.role}
+                onChange={changeEventHandler}
                 className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm appearance-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent cursor-pointer"
                 required
               >
@@ -94,38 +129,41 @@ const Registration = () => {
 
           <div>
             <label htmlFor="full-name" className="block text-sm font-medium text-gray-600 mb-1">Full Name</label>
-            <input 
-              type="text" 
-              id="full-name" 
-              value={fullName}
-              onChange={(e) => setFullName(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" 
-              required 
+            <input
+              type="text"
+              id="full-name"
+              name='fullName'
+              value={input.fullName}
+              onChange={changeEventHandler}
+              className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              required
             />
           </div>
 
           <div>
             <label htmlFor="email" className="block text-sm font-medium text-gray-600 mb-1">Email</label>
-            <input 
-              type="email" 
-              id="email" 
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" 
-              required 
+            <input
+              type="email"
+              id="email"
+              name="email"
+              value={input.email}
+              onChange={changeEventHandler}
+              className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              required
             />
           </div>
 
           <div>
             <label htmlFor="password" className="block text-sm font-medium text-gray-600 mb-1">Password</label>
             <div className="relative">
-              <input 
-                type="password" 
-                id="password" 
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-4 py-2 pr-12 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" 
-                required 
+              <input
+                type="password"
+                id="password"
+                name='password'
+                value={input.password}
+                onChange={changeEventHandler}
+                className="w-full px-4 py-2 pr-12 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                required
               />
               <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
@@ -135,25 +173,24 @@ const Registration = () => {
               </div>
             </div>
           </div>
-
-          <div>
-            <label htmlFor="confirm-password" className="block text-sm font-medium text-gray-600 mb-1">Confirm Password</label>
-            <input 
-              type="password" 
-              id="confirm-password" 
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" 
-              required 
-            />
-          </div>
-
-          <button 
-            type="submit" 
-            className="w-full bg-blue-600 text-white font-semibold py-2 rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
+{
+   user?  (<Link to="/otp"><button
+            type="submit"
+            className="w-full bg-blue-600 text-white font-semibold py-2 rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors cursor-pointer"
           >
             Sign Up
           </button>
+          </Link>) : (
+            <button
+            type="submit"
+            className="w-full bg-blue-600 text-white font-semibold py-2 rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors cursor-pointer"
+          >
+            Sign Up
+          </button>
+          )
+}
+          
+          
         </form>
 
         <div className="mt-4 text-center text-sm text-gray-600">
@@ -161,7 +198,7 @@ const Registration = () => {
           <Link to="/login" className="text-blue-600 hover:underline font-medium">Log in</Link>
         </div>
       </div>
-      
+
     </div>
   );
 };

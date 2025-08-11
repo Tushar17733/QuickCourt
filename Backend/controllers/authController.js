@@ -11,9 +11,6 @@ export const signup = async (req, res) => {
   try {
     const { fullName, email, password, role } = req.body;
 
-    // if (!req.file) {
-    //   return res.status(400).json({ message: "Avatar image is required" });
-    // }
 
     // Check if email already exists in DB
     const existingUser = await User.findOne({ email });
@@ -23,7 +20,6 @@ export const signup = async (req, res) => {
 
     // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
-
 
     let avatarUrl = "";
     if (req.file) {
@@ -57,10 +53,6 @@ export const signup = async (req, res) => {
         <p>This code will expire in 10 minutes.</p>
       `
     });
-
-
-    // Send OTP via email service (placeholder)
-    console.log(`OTP for ${email}: ${otp}`);
 
     res.status(200).json({
       message: "OTP sent to your email. Please verify to complete registration."

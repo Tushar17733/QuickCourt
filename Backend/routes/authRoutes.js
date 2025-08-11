@@ -5,7 +5,7 @@ import { singleUpload } from "../middlewares/multer.js";
 
 const router = express.Router();
 
-router.post("/signup", signup);
+router.post("/signup",singleUpload, signup);
 router.post("/verify-otp", verifyOtp);
 router.post("/login", login);
 router.route("/logout").get(logout)
