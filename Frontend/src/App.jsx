@@ -7,6 +7,8 @@ import Otp from './page/Otp'
 import Profile from './page/Profile'
 
 import Venues from './page/Venues'
+import VenueDetails from './page/VenueDetails'
+import CourtBookingForm from './page/CourtBookingForm'
 
 function App() {
   return (
@@ -19,6 +21,8 @@ function App() {
         <Route path="/profile" element={<Profile/>} />
         
         <Route path="/venues" element={<Venues />} />
+        <Route path="/venuedetails" element={<VenueDetails />} />
+        <Route path="/courtbooking" element={<CourtBookingForm />} />
       </Routes>
     </div>
   )
