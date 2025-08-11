@@ -1,11 +1,16 @@
 import { User } from "../models/userModel.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import crypto from "crypto";
+import getDataUri from "../utils/datauri.js"
+import cloudinary from "../utils/cloudinary.js"
 
 export const signup = async (req, res) => {
   try {
     const { fullName, email, password, role, avatar } = req.body;
+
+    const file=req.file;
+        const fileUri = getDataUri(file);
+        const cloudResponse = await cloudinary.uploader.upload(fileUri.content);
 
     // Check if user exists
     let existingUser = await User.findOne({ email });
@@ -25,7 +30,7 @@ export const signup = async (req, res) => {
       email,
       password: hashedPassword,
       role,
-      avatar,
+      avatar:cloudResponse.secure_url,
       otp,
       otpExpires
     });
@@ -90,4 +95,15 @@ export const login = async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
+};
+
+export const logout = async (req, res) => {
+    try {
+        return res.status(200).cookie("token", "", { maxAge: 0 }).json({
+            message: "Logged out successfully",
+            success: true
+        });
+    } catch (error) {
+        console.log(error);
+    }
 };
