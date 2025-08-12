@@ -1,12 +1,15 @@
 import React from 'react';
 import Header from '../components/Header';
-import { useParams } from 'react-router-dom';
+import { useParams, useLocation, useNavigate } from 'react-router-dom';
 
 const VenueDetails = () => {
   const { id } = useParams();
-  console.log(id);
-
-  const venue = {
+  const location = useLocation();
+  const navigate = useNavigate();
+  
+  // Get venue data from navigation state or use default data
+  const venue = location.state?.venue || {
+    id: id,
     name: "SBR Badminton",
     location: "Satellite, Jodhpur Village",
     rating: 4.5,
@@ -54,6 +57,9 @@ const VenueDetails = () => {
     ]
   };
 
+  console.log('Venue ID:', id);
+  console.log('Venue Data:', venue);
+
   const StarRating = ({ rating }) => (
     <div className="flex items-center space-x-1">
       {[...Array(5)].map((_, i) => (
@@ -69,6 +75,23 @@ const VenueDetails = () => {
       ))}
     </div>
   );
+
+  // Safety check to ensure venue data exists
+  if (!venue) {
+    return (
+      <div className="min-h-screen bg-gray-100 flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-red-600">Venue not found</p>
+          <button 
+            onClick={() => navigate('/')}
+            className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+          >
+            Go Home
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-100 p-4 sm:p-6 lg:p-8 flex items-center justify-center font-sans">
@@ -94,16 +117,29 @@ const VenueDetails = () => {
             </div>
             <div className="flex items-center space-x-1">
               <StarRating rating={venue.rating} />
-              <span>({venue.reviewCount})</span>
+              <span>({venue.reviewCount || (venue.reviews && venue.reviews.length) || 0})</span>
             </div>
           </div>
         </div>
 
         <div className="p-6 md:p-8 lg:grid lg:grid-cols-3 lg:gap-8">
           <div className="lg:col-span-2 mb-6 lg:mb-0">
-            <div className="relative w-full h-80 md:h-96 bg-gray-200 rounded-lg flex items-center justify-center text-gray-500 font-bold mb-4 lg:mb-0">
-              <span className="text-xl">Images / Videos</span>
-              <button className="absolute left-4 bg-white rounded-full p-2 shadow-md">
+            {/* Venue Cover Image */}
+            <div className="relative w-full h-80 md:h-96 bg-gray-200 rounded-lg overflow-hidden mb-4 lg:mb-0">
+              {venue.coverImage ? (
+                <img
+                  src={venue.coverImage}
+                  alt={venue.name}
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <div className="w-full h-full flex items-center justify-center text-gray-500 font-bold">
+                  <span className="text-xl">Venue Image</span>
+                </div>
+              )}
+              
+              {/* Navigation buttons */}
+              <button className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white/80 backdrop-blur-sm rounded-full p-2 shadow-md hover:bg-white transition-all">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   className="h-6 w-6 text-gray-700"
@@ -114,7 +150,7 @@ const VenueDetails = () => {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
                 </svg>
               </button>
-              <button className="absolute right-4 bg-white rounded-full p-2 shadow-md">
+              <button className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white/80 backdrop-blur-sm rounded-full p-2 shadow-md hover:bg-white transition-all">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   className="h-6 w-6 text-gray-700"
@@ -125,6 +161,11 @@ const VenueDetails = () => {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                 </svg>
               </button>
+              
+              {/* Image counter */}
+              <div className="absolute bottom-4 right-4 bg-black/50 text-white px-2 py-1 rounded-full text-sm">
+                1 / 1
+              </div>
             </div>
           </div>
 
@@ -183,7 +224,7 @@ const VenueDetails = () => {
               <span className="text-sm font-normal text-gray-500 ml-2">(Click on sports to view price chart)</span>
             </h3>
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
-              {venue.sportsAvailable.map((sport, index) => (
+              {venue.sportsAvailable && venue.sportsAvailable.map((sport, index) => (
                 <div
                   key={index}
                   className="flex flex-col items-center p-4 bg-gray-50 rounded-lg shadow-sm border border-gray-200 cursor-pointer hover:bg-gray-100 transition-colors duration-200"
@@ -198,7 +239,7 @@ const VenueDetails = () => {
           <div>
             <h3 className="text-xl font-bold text-gray-900 mb-4">Amenities</h3>
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-              {venue.amenities.map((amenity, index) => (
+              {venue.amenities && venue.amenities.map((amenity, index) => (
                 <div key={index} className="flex items-center space-x-2">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -221,7 +262,7 @@ const VenueDetails = () => {
           <div>
             <h3 className="text-xl font-bold text-gray-900 mb-4">About Venue</h3>
             <ul className="list-disc list-inside space-y-2 text-gray-700">
-              {venue.about.map((item, index) => (
+              {venue.about && venue.about.map((item, index) => (
                 <li key={index}>{item}</li>
               ))}
             </ul>
@@ -230,7 +271,7 @@ const VenueDetails = () => {
           <div>
             <h3 className="text-xl font-bold text-gray-900 mb-4">Player Reviews & Ratings</h3>
             <div className="space-y-4">
-              {venue.reviews.map((review) => (
+              {venue.reviews && venue.reviews.map((review) => (
                 <div
                   key={review.id}
                   className="bg-gray-50 p-4 rounded-lg shadow-sm border border-gray-200"
@@ -238,7 +279,7 @@ const VenueDetails = () => {
                   <div className="flex items-center justify-between mb-2">
                     <div className="flex items-center space-x-2">
                       <div className="h-10 w-10 bg-gray-300 rounded-full flex items-center justify-center text-gray-700 font-bold">
-                        {review.user.charAt(0)}
+                        {review.user && review.user.charAt(0)}
                       </div>
                       <div>
                         <p className="font-semibold text-gray-800">{review.user}</p>

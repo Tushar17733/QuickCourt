@@ -13,8 +13,11 @@ import { Link, useNavigate } from 'react-router-dom';
 
 import { useAuth } from '../context/AuthContext';
 
-const VenueCard = ({ venue }) => (
-  <div className="min-w-[250px] md:min-w-[300px] bg-white rounded-2xl shadow-md overflow-hidden snap-center">
+const VenueCard = ({ venue, onClick }) => (
+  <div 
+    className="min-w-[250px] md:min-w-[300px] bg-white rounded-2xl shadow-md overflow-hidden snap-center cursor-pointer hover:shadow-lg transition-all duration-200"
+    onClick={onClick}
+  >
     <div className="w-full h-36 bg-gray-200">
       <img 
         src={venue.image} 
@@ -27,7 +30,7 @@ const VenueCard = ({ venue }) => (
         <h4 className="font-semibold">{venue.name}</h4>
         <div className="flex items-center text-sm text-gray-600">
           <Star size={14} fill="gold" strokeWidth={0} className="mr-1" />
-          <span>{venue.rating} ({venue.reviews})</span>
+          <span>{venue.rating} ({venue.reviewCount})</span>
         </div>
       </div>
       <div className="flex items-center text-sm text-gray-500 mb-3">
@@ -85,36 +88,190 @@ const Home = () => {
 
   const venues = [
     {
+      id: 1,
       name: 'SBR Badminton',
       rating: 4.5,
-      reviews: 6,
+      reviewCount: 6,
       location: 'Vaishnodevi Clr',
       tags: ['Badminton', 'Outdoor'],
       image: SBRBadmintonImage,
+      coverImage: SBRBadmintonImage,
+      operatingHours: "7:00AM - 11:00PM",
+      address: "2nd Floor, Aangam Banquet Hall, Opp. Auda Garden, Satellite, Jodhpur Village, Ahmedabad, Gujarat - 380081",
+      sportsAvailable: ["Badminton", "Table Tennis", "Box Cricket"],
+      amenities: [
+        { name: "Parking" },
+        { name: "Restroom" },
+        { name: "Refreshments" },
+        { name: "CCTV Surveillance" },
+        { name: "Centrally Air Conditioned Hall" },
+        { name: "Seating Arrangement" },
+        { name: "WiFi" },
+        { name: "Library" },
+      ],
+      about: [
+        "Tournament Training Venue",
+        "For more than 2 players Rs. 50 extra per person",
+        "Equipment available on rent",
+      ],
+      reviews: [
+        {
+          id: 1,
+          user: "Mitchell Admin",
+          date: "10 June 2025, 5:30 PM",
+          rating: 4,
+          comment: "Nice turf, well maintained"
+        },
+        {
+          id: 2,
+          user: "Mitchell Admin",
+          date: "10 June 2025, 5:30 PM",
+          rating: 5,
+          comment: "Great facilities and friendly staff!"
+        },
+        {
+          id: 3,
+          user: "Mitchell Admin",
+          date: "10 June 2025, 5:30 PM",
+          rating: 4,
+          comment: "Had a great time playing here with my friends."
+        }
+      ]
     },
     {
+      id: 2,
       name: 'PQR Sports Arena',
       rating: 4.8,
-      reviews: 12,
+      reviewCount: 12,
       location: 'Science City Rd',
       tags: ['Tennis', 'Indoor'],
       image: PQRSportsArenaImage,
+      coverImage: PQRSportsArenaImage,
+      operatingHours: "6:00AM - 10:00PM",
+      address: "Science City Road, Near Gujarat Science City, Ahmedabad, Gujarat - 380060",
+      sportsAvailable: ["Tennis", "Badminton", "Squash"],
+      amenities: [
+        { name: "Parking" },
+        { name: "Restroom" },
+        { name: "Refreshments" },
+        { name: "CCTV Surveillance" },
+        { name: "Air Conditioned" },
+        { name: "Coaching Available" },
+        { name: "WiFi" },
+        { name: "Equipment Rental" },
+      ],
+      about: [
+        "Professional Tennis Courts",
+        "Certified coaches available",
+        "Tournament hosting facility",
+        "Equipment rental services"
+      ],
+      reviews: [
+        {
+          id: 1,
+          user: "John Doe",
+          date: "15 June 2025, 3:00 PM",
+          rating: 5,
+          comment: "Excellent tennis courts with professional coaching!"
+        },
+        {
+          id: 2,
+          user: "Jane Smith",
+          date: "12 June 2025, 7:00 PM",
+          rating: 4,
+          comment: "Great facility, well maintained courts."
+        }
+      ]
     },
     {
+      id: 3,
       name: 'XYZ Cricket Ground',
       rating: 4.2,
-      reviews: 8,
+      reviewCount: 8,
       location: 'SG Highway',
       tags: ['Cricket'],
       image: XYZCricketGroundImage,
+      coverImage: XYZCricketGroundImage,
+      operatingHours: "5:00AM - 11:00PM",
+      address: "SG Highway, Near AlphaOne Mall, Ahmedabad, Gujarat - 380054",
+      sportsAvailable: ["Cricket", "Football"],
+      amenities: [
+        { name: "Parking" },
+        { name: "Restroom" },
+        { name: "Refreshments" },
+        { name: "Flood Lights" },
+        { name: "Pavilion" },
+        { name: "Equipment Rental" },
+        { name: "Water Cooler" },
+        { name: "First Aid" },
+      ],
+      about: [
+        "Professional cricket ground",
+        "Flood lights for evening matches",
+        "Equipment available on rent",
+        "Tournament hosting available"
+      ],
+      reviews: [
+        {
+          id: 1,
+          user: "Cricket Fan",
+          date: "8 June 2025, 6:00 PM",
+          rating: 4,
+          comment: "Great cricket ground with good facilities."
+        },
+        {
+          id: 2,
+          user: "Sports Lover",
+          date: "5 June 2025, 4:00 PM",
+          rating: 4,
+          comment: "Well maintained ground, good for practice."
+        }
+      ]
     },
     {
+      id: 4,
       name: 'Water World',
       rating: 4.9,
-      reviews: 25,
+      reviewCount: 25,
       location: 'Thaltej',
       tags: ['Swimming'],
       image: WaterWorldImage,
+      coverImage: WaterWorldImage,
+      operatingHours: "6:00AM - 9:00PM",
+      address: "Thaltej, Near Thaltej Circle, Ahmedabad, Gujarat - 380059",
+      sportsAvailable: ["Swimming", "Aqua Fitness"],
+      amenities: [
+        { name: "Parking" },
+        { name: "Changing Rooms" },
+        { name: "Shower Facilities" },
+        { name: "Locker Rooms" },
+        { name: "Swimming Equipment" },
+        { name: "Professional Trainers" },
+        { name: "Cafeteria" },
+        { name: "First Aid" },
+      ],
+      about: [
+        "Olympic size swimming pool",
+        "Professional swimming coaches",
+        "Aqua fitness classes available",
+        "Children's pool available"
+      ],
+      reviews: [
+        {
+          id: 1,
+          user: "Swimmer Pro",
+          date: "20 June 2025, 8:00 AM",
+          rating: 5,
+          comment: "Best swimming facility in Ahmedabad!"
+        },
+        {
+          id: 2,
+          user: "Aqua Fitness",
+          date: "18 June 2025, 7:00 PM",
+          rating: 5,
+          comment: "Excellent aqua fitness classes."
+        }
+      ]
     },
   ];
 
@@ -187,7 +344,7 @@ const Home = () => {
                         View Profile
                       </Button>
                     </Link>                  
-              
+               
                     
                     <Button 
                       onClick={logoutHandler} 
@@ -222,7 +379,6 @@ const Home = () => {
 
       </header>
 
-
       {/* Hero Section */}
       <section className="flex flex-col md:flex-row items-center my-8 md:my-16 px-4 md:px-8">
         <div className="flex-1 p-4 md:p-8 space-y-4">
@@ -245,7 +401,7 @@ const Home = () => {
         </div>
         <div className="flex-1 w-full md:w-auto p-4 md:p-8">
           <img 
-            src={FindPlayersVenuesImage} 
+            src="https://as1.ftcdn.net/v2/jpg/02/87/04/00/1000_F_287040077_U2ckmhpzeyqDHiybj0dfCfX6NRCEKdoe.jpg"
             alt="Find Players & Venues Nearby" 
             className="w-full h-64 md:h-96 rounded-2xl object-cover shadow-lg"
           />
@@ -264,9 +420,13 @@ const Home = () => {
               <ChevronRight size={16} className="ml-1" />
             </Link>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 cursor-pointer">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {venues.map((venue, index) => (
-                <VenueCard key={index} venue={venue} onClick={() => navigate(`/venue/${venue.id}`)} />
+              <VenueCard 
+                key={venue.id} 
+                venue={venue} 
+                onClick={() => navigate(`/venue/${venue.id}`, { state: { venue } })} 
+              />
             ))}
           </div>
           <div className="text-center mt-8">
