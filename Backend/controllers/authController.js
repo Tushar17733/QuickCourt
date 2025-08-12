@@ -121,6 +121,14 @@ export const login = async (req, res) => {
       expiresIn: "7d"
     });
 
+    // Set token in cookie
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
+    });
+
     // Return user data along with token
     res.json({ 
       message: "Login successful", 
@@ -173,6 +181,25 @@ export const updateProfile = async (req, res) => {
       }
     });
 
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+export const getProfile = async (req, res) => {
+  try {
+    const user = req.user;
+    
+    res.status(200).json({
+      user: {
+        fullName: user.fullName,
+        email: user.email,
+        role: user.role,
+        avatar: user.avatar || "https://thumbs.dreamstime.com/b/default-avatar-profile-icon-vector-social-media-user-image-182145777.jpg",
+        isVerified: user.isVerified,
+        createdAt: user.createdAt
+      }
+    });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
