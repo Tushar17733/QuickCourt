@@ -2,10 +2,12 @@ import React, { useState, useMemo } from "react";
 import venuesData from "../data/venues";
 import "../index.css";
 import Header from "../components/Header";
+import { useNavigate } from "react-router-dom";
 
 const PAGE_SIZE = 9;
 
 const Venues = () => {
+  const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
   const [sportFilter, setSportFilter] = useState("All");
   const [venueTypeFilter, setVenueTypeFilter] = useState("All");
@@ -102,12 +104,16 @@ const Venues = () => {
     setCurrentPage(1);
   };
 
+  const handleViewDetails = (venueId) => {
+    navigate(`/venue/${venueId}`);
+  };
+
   return (
-      <>
-        <Header />
-        <div className="w-full text-center py-4 text-lg font-semibold border-b border-gray-300">
-          Sports Venues in Ahmedabad: Discover and Book Nearby Venues
-        </div>
+    <>
+      <Header />
+      <div className="w-full text-center py-4 text-lg font-semibold border-b border-gray-300">
+        Sports Venues in Ahmedabad: Discover and Book Nearby Venues
+      </div>
       <div className="venues-page flex flex-col md:flex-row md:gap-6 p-6 w-full pb-20">
         {/* Filters */}
         <aside className="filters w-full md:w-1/4 p-4 border rounded-md mb-4 md:mb-0 bg-white shadow-md">
@@ -235,7 +241,10 @@ const Venues = () => {
                   </span>
                 ))}
               </div>
-              <button className="bg-green-300 hover:bg-green-400 text-green-900 px-4 py-2 rounded self-start transition">
+              <button 
+                onClick={() => handleViewDetails(venue.id)}
+                className="bg-green-300 hover:bg-green-400 text-green-900 px-4 py-2 rounded self-start transition"
+              >
                 View Details
               </button>
             </div>
