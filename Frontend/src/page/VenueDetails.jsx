@@ -1,12 +1,12 @@
 import React from 'react';
 import Header from '../components/Header';
-import { useParams, useLocation, useNavigate } from 'react-router-dom';
+import { useParams, useLocation, useNavigate, Link } from 'react-router-dom';
 
 const VenueDetails = () => {
   const { id } = useParams();
   const location = useLocation();
   const navigate = useNavigate();
-  
+
   // Get venue data from navigation state or use default data
   const venue = location.state?.venue || {
     id: id,
@@ -82,7 +82,7 @@ const VenueDetails = () => {
       <div className="min-h-screen bg-gray-100 flex items-center justify-center">
         <div className="text-center">
           <p className="text-red-600">Venue not found</p>
-          <button 
+          <button
             onClick={() => navigate('/')}
             className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
           >
@@ -137,7 +137,7 @@ const VenueDetails = () => {
                   <span className="text-xl">Venue Image</span>
                 </div>
               )}
-              
+
               {/* Navigation buttons */}
               <button className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white/80 backdrop-blur-sm rounded-full p-2 shadow-md hover:bg-white transition-all">
                 <svg
@@ -161,7 +161,7 @@ const VenueDetails = () => {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                 </svg>
               </button>
-              
+
               {/* Image counter */}
               <div className="absolute bottom-4 right-4 bg-black/50 text-white px-2 py-1 rounded-full text-sm">
                 1 / 1
@@ -170,9 +170,9 @@ const VenueDetails = () => {
           </div>
 
           <div className="lg:col-span-1 space-y-4">
-            <button className="w-full bg-green-500 text-white font-bold py-3 rounded-lg shadow-md hover:bg-green-600 transition-colors duration-200">
-              Book This Venue
-            </button>
+            <Link to="/courtbooking">
+              <button className="w-full bg-green-500 text-white font-bold py-3 rounded-lg shadow-md hover:bg-green-600 transition-colors duration-200 cursor-pointer">Book This Venue</button>
+            </Link>
 
             <div className="bg-gray-50 p-4 rounded-lg border border-gray-200 space-y-4">
               <div className="flex items-center space-x-2">

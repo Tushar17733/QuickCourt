@@ -147,7 +147,7 @@ const CourtBookingForm = () => {
         
         {/* Continue to Payment button */}
         <div className="mt-8">
-          <button className="bg-green-500 text-white font-bold text-lg w-full py-4 rounded-lg shadow-md hover:bg-green-600 transition-colors">
+          <button className="bg-green-500 text-white font-bold text-lg w-full py-4 rounded-lg shadow-md hover:bg-green-600 transition-colors cursor-pointer">
             Continue to Payment - ₹{totalPrice}.00
           </button>
         </div>
