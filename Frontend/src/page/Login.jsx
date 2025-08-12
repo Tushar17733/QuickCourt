@@ -4,6 +4,7 @@ import axios from 'axios';
 import sportsImage from '../assets/sports.jpg';
 import { USER_API_ENDPOINT } from '../utils/constant';
 import { useAuth } from '../context/AuthContext';
+import { Home } from 'lucide-react';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -55,6 +56,17 @@ const Login = () => {
 
   return (
     <div className="min-h-screen bg-white font-sans text-gray-800">
+      {/* Home Button - Top Left */}
+      <div className="absolute top-4 left-4 z-20">
+        <Link
+          to="/"
+          className="flex items-center space-x-2 bg-white/90 backdrop-blur-sm px-4 py-2 rounded-lg shadow-lg hover:bg-white transition-all duration-200 text-gray-700 hover:text-blue-600"
+        >
+          <Home size={20} />
+          <span className="font-medium">Home</span>
+        </Link>
+      </div>
+
       {/* Background Image for Mobile - hidden on md and up */}
       <div className="md:hidden fixed inset-0 z-0">
         <img
@@ -66,17 +78,19 @@ const Login = () => {
 
       {/* Content Container */}
       <div className="relative z-10 flex flex-col md:flex-row min-h-screen">
-        {/* Left Panel - Image (Desktop only) */}
-        <div className="hidden md:flex md:w-1/2 bg-[#f0f0f0] relative items-center justify-center">
-          <img
-            src={sportsImage}
-            alt="Sports"
-            className="w-full h-full object-cover object-center"
-          />
+        {/* Left Panel - Image (Desktop only) - Made smaller */}
+        <div className="hidden md:flex md:w-2/5 bg-[#f0f0f0] relative items-center justify-center">
+          <div className="w-4/5 h-4/5 rounded-2xl overflow-hidden shadow-2xl">
+            <img
+              src={sportsImage}
+              alt="Sports"
+              className="w-full h-full object-cover object-center"
+            />
+          </div>
         </div>
 
-        {/* Right Panel - Login Form */}
-        <div className="flex flex-col w-full md:w-1/2 p-6 sm:p-8 md:p-16 justify-center">
+        {/* Right Panel - Login Form - Made wider */}
+        <div className="flex flex-col w-full md:w-3/5 p-6 sm:p-8 md:p-16 justify-center">
           <div className="flex flex-col items-center mt-8 md:mt-0">
             <h2 className="text-3xl md:text-4xl font-bold text-center mb-2">QUICKCOURT</h2>
             <h3 className="text-lg md:text-xl text-center mb-6">LOGIN</h3>
@@ -130,7 +144,7 @@ const Login = () => {
           <div className="mt-6 md:mt-8 text-center text-sm space-y-2">
             <p className="text-gray-600">
               Don't have an account?{' '}
-              <Link to="/registration" className="text-blue-600 hover:underline font-medium">Sign up</Link>
+              <Link to="/register" className="text-blue-600 hover:underline font-medium">Sign up</Link>
             </p>
             <p>
               <a href="#" className="text-blue-600 hover:underline text-sm">Forgot password?</a>

@@ -235,7 +235,7 @@ const Venues = () => {
                   </span>
                 ))}
               </div>
-              <button className="bg-green-300 hover:bg-green-400 text-green-900 px-4 py-2 rounded self-start transition">
+              <button className="bg-green-300 hover:bg-green-400 text-green-900 px-4 py-2 rounded self-start transition cursor-pointer">
                 View Details
               </button>
             </div>
@@ -259,7 +259,7 @@ const Venues = () => {
                 currentPage === idx + 1
                   ? "bg-purple-600 text-white"
                   : "hover:bg-purple-100"
-              } transition`}
+              } transition cursor-pointer`}
             >
               {idx + 1}
             </button>
@@ -267,7 +267,7 @@ const Venues = () => {
           <button
             onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
             disabled={currentPage === totalPages}
-            className="px-4 py-2 border rounded-r disabled:opacity-50 hover:bg-purple-600 hover:text-white transition"
+            className="px-4 py-2 border rounded-r disabled:opacity-50 hover:bg-purple-600 hover:text-white transition cursor-pointer"
           >
             {'>'}
           </button>

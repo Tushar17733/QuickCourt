@@ -4,6 +4,7 @@ import sportsImage from '../assets/sports.jpg';
 import { USER_API_ENDPOINT } from '../utils/constant';
 import axios from "axios"
 import { useSelector } from 'react-redux';
+import { Home } from 'lucide-react';
 
 const Registration = () => {
 const {user} = useSelector(store=>store.auth)
@@ -61,18 +62,30 @@ const {user} = useSelector(store=>store.auth)
 
   return (
     <div className="flex flex-col md:flex-row h-screen bg-white font-sans text-gray-800 overflow-hidden">
-
-      {/* Left Panel - Image takes half of the page */}
-      <div className="hidden md:flex md:w-1/2 bg-[#f0f0f0] relative items-center justify-center p-0">
-        <img
-          src={sportsImage}
-          alt="Sports"
-          className="w-full h-full object-cover object-center"
-        />
+      {/* Home Button - Top Left */}
+      <div className="absolute top-4 left-4 z-20">
+        <Link
+          to="/"
+          className="flex items-center space-x-2 bg-white/90 backdrop-blur-sm px-4 py-2 rounded-lg shadow-lg hover:bg-white transition-all duration-200 text-gray-700 hover:text-blue-600"
+        >
+          <Home size={20} />
+          <span className="font-medium">Home</span>
+        </Link>
       </div>
 
-      {/* Right Panel - Sign Up Form */}
-      <div className="relative flex flex-col w-full md:w-1/2 p-8 sm:p-12 md:p-16 justify-center">
+      {/* Left Panel - Image (Desktop only) - Made smaller */}
+      <div className="hidden md:flex md:w-2/5 bg-[#f0f0f0] relative items-center justify-center p-0">
+        <div className="w-4/5 h-4/5 rounded-2xl overflow-hidden shadow-2xl">
+          <img
+            src={sportsImage}
+            alt="Sports"
+            className="w-full h-full object-cover object-center"
+          />
+        </div>
+      </div>
+
+      {/* Right Panel - Sign Up Form - Made wider */}
+      <div className="relative flex flex-col w-full md:w-3/5 p-8 sm:p-12 md:p-16 justify-center">
 
         <div className="flex flex-col items-center">
           <h2 className="text-4xl font-bold text-center mb-2 mt-16 md:mt-0">QUICKCOURT</h2>

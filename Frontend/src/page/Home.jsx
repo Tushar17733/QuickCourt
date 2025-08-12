@@ -143,7 +143,7 @@ const Home = () => {
     <div className="min-h-screen bg-white text-gray-800 font-sans overflow-x-hidden">
       {/* Header */}
       <header className="flex items-center justify-between py-4 border-b border-gray-200 px-4 md:px-8">
-        <h1 className="text-xl md:text-2xl font-bold">QUICKCOURT</h1>
+        <h1 className="text-xl md:text-2xl font-bold cursor-pointer" onClick={() => navigate('/')}>QUICKCOURT</h1>
         <div className="flex items-center space-x-4">
           <button className="flex items-center text-gray-600 px-4 py-2 rounded-full border border-gray-300 hover:bg-gray-100 transition-colors duration-200">
             <Calendar size={18} className="mr-2" />

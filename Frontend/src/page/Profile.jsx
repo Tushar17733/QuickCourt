@@ -191,7 +191,7 @@ const Profile = () => {
     <div className="min-h-screen bg-gray-100 font-inter">
       {/* Header with navbar */}
       <header className="bg-white shadow-md px-6 py-4 flex items-center justify-between">
-        <h1 className="text-xl font-bold">QUICKCOURT</h1>
+        <h1 className="text-xl font-bold cursor-pointer" onClick={() => navigate('/')}>QUICKCOURT</h1>
         <div className="flex items-center space-x-6">
           <div className="flex items-center space-x-2 cursor-pointer select-none">
             <FaBook className="text-gray-500" />
