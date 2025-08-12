@@ -55,14 +55,14 @@ export default function Header() {
           <>
             <Button 
               onClick={() => navigate('/login')}
-              className="text-gray-600 px-4 py-2 rounded-full border border-gray-300 hover:bg-gray-100 transition-colors duration-200"
+              className="text-gray-600 px-4 py-2 rounded-full border border-gray-300 hover:bg-gray-100 transition-colors duration-200 cursor-pointer"
               variant="outline"
             >
               Login
             </Button>
             <Button 
               onClick={() => navigate('/register')}
-              className="text-white bg-blue-600 px-4 py-2 rounded-full font-semibold hover:bg-blue-700 transition-colors duration-200"
+              className="text-white bg-blue-600 px-4 py-2 rounded-full font-semibold hover:bg-blue-700 transition-colors duration-200 cursor-pointer"
             >
               Sign Up
             </Button>
