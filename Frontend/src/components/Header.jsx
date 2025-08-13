@@ -19,7 +19,7 @@ export default function Header() {
       <h1 className="text-xl md:text-2xl font-bold cursor-pointer" onClick={() => navigate('/')}>QUICKCOURT</h1>
 
       <div className="hidden md:flex items-center space-x-4">
-        <button className="flex items-center text-gray-600 px-4 py-2 rounded-full border border-gray-300 hover:bg-gray-100 transition-colors duration-200">
+        <button className="flex items-center text-gray-600 px-4 py-2 rounded-full border border-gray-300 hover:bg-gray-100 transition-colors duration-200 cursor-pointer">
           <Calendar size={18} className="mr-2" />
           <span>Book</span>
         </button>
@@ -40,27 +40,30 @@ export default function Header() {
                   <h4 className="font-semibold text-lg">{user?.fullName}</h4>
                   <p className="text-sm text-gray-600">{user?.email || 'No email provided'}</p>
                 </div>
-                <Link to="/profile" className="w-full">
-                  <Button className="w-full mb-2">
-                    View Profile
+                <div className="flex space-y-2 gap-6 w-full">
+
+                  <Link to="/profile" className="w-full">
+                    <Button className="w-full mb-2">
+                      View Profile
+                    </Button>
+                  </Link>
+                  <Button onClick={logoutHandler} className="w-full">
+                    Logout
                   </Button>
-                </Link>
-                <Button onClick={logoutHandler} className="w-full">
-                  Logout
-                </Button>
+                </div>
               </div>
             </PopoverContent>
           </Popover>
         ) : (
           <>
-            <Button 
+            <Button
               onClick={() => navigate('/login')}
               className="text-gray-600 px-4 py-2 rounded-full border border-gray-300 hover:bg-gray-100 transition-colors duration-200 cursor-pointer"
               variant="outline"
             >
               Login
             </Button>
-            <Button 
+            <Button
               onClick={() => navigate('/register')}
               className="text-white bg-blue-600 px-4 py-2 rounded-full font-semibold hover:bg-blue-700 transition-colors duration-200 cursor-pointer"
             >

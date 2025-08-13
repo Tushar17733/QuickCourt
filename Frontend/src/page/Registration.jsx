@@ -52,6 +52,7 @@ const {user} = useSelector(store=>store.auth)
       if (res.status === 200) {
         // Store email in localStorage for OTP page
         localStorage.setItem('pendingEmail', input.email);
+        alert("Please check your email for OTP")
         navigate("/otp");
       }
     } catch (error) {
